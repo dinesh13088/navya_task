@@ -69,7 +69,6 @@ Visit **http://127.0.0.1:8000/** — you'll be redirected to log in.
 
 
 ```bash
-python manage.py test
 ```
 
 ## Approach
