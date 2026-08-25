@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Delete Expense{% endblock %}
+{% block content %}
+    <h1>Delete Expense</h1>
+    <p>Are you sure you want to delete "<strong>{{ object.title }}</strong>" (${{ object.amount }})?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn danger">Yes, delete</button>
+        <a href="{% url 'expense-list' %}" class="btn secondary" style="text-decoration:none;">Cancel</a>
+    </form>
+{% endblock %}

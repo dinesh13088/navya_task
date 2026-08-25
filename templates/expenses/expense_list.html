@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}My Expenses{% endblock %}
+{% block content %}
+    <div class="top-actions">
+        <h1>My Expenses</h1>
+        <a href="{% url 'expense-create' %}" class="btn">+ Add Expense</a>
+    </div>
+
+    <div class="summary-cards">
+        <div class="card">
+            <div class="label">This Month's Total</div>
+            <div class="value">Rs{{ month_total|floatformat:2 }}</div>
+        </div>
+        <div class="card">
+            <div class="label">Filtered Total</div>
+            <div class="value">Rs{{ filtered_total|floatformat:2 }}</div>
+        </div>
+    </div>
+
+    <form method="get" class="filters">
+        <div>
+            <label for="category">Category</label>
+            <select name="category" id="category">
+                <option value="">All</option>
+                {% for value, label in categories %}
+                    <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="start_date">From</label>
+            <input type="date" name="start_date" id="start_date" value="{{ start_date }}">
+        </div>
+        <div>
+            <label for="end_date">To</label>
+            <input type="date" name="end_date" id="end_date" value="{{ end_date }}">
+        </div>
+        <div>
+            <button type="submit" class="btn secondary">Filter</button>
+            <a href="{% url 'expense-list' %}" class="btn secondary" style="text-decoration:none;">Clear</a>
+        </div>
+    </form>
+
+    {% if expenses %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.title }}</td>
+                        <td>Rs{{ expense.amount }}</td>
+                        <td>{{ expense.category }}</td>
+                        <td>{{ expense.date }}</td>
+                        <td class="actions">
+                            <a class="edit" href="{% url 'expense-edit' expense.pk %}">Edit</a>
+                            <a class="delete" href="{% url 'expense-delete' expense.pk %}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_paginated %}
+            <div style="margin-top:16px;">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+                {% endif %}
+                <span style="margin:0 8px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty">No expenses found. <a href="{% url 'expense-create' %}">Add your first expense</a>.</div>
+    {% endif %}
+{% endblock %}

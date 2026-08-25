@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Expense{% endblock %}
+{% block content %}
+    <h1>{% if object %}Edit Expense{% else %}Add Expense{% endif %}</h1>
+
+    <form class="expense-form" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </p>
+        {% endfor %}
+        <button type="submit" class="btn">Save</button>
+        <a href="{% url 'expense-list' %}" class="btn" style="text-decoration:none;">Cancel</a>
+    </form>
+{% endblock %}
